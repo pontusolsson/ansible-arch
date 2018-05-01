@@ -1,0 +1,21 @@
+[Unit]
+Description=OpenShift oc cluster up Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/bin/oc cluster up --host-config-dir=/srv/openshift/config --host-data-dir=/srv/openshift/data --host-pv-dir=/srv/openshift/pv --host-volumes-dir=/srv/openshift/volumes --use-existing-config=true --public-hostname={{ ansible_default_ipv4.address }} --routing-suffix=app.olsson.me --loglevel=1 --metrics=true
+ExecStop=/usr/local/bin/oc cluster down
+WorkingDirectory=/srv/openshift
+Restart=no
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=openshift
+User=root
+Type=oneshot
+RemainAfterExit=yes
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,61 @@
+- hosts: all
+  become: True
+  tasks:
+
+### Base packages and settings
+
+  - name: 'Install packages'
+    package:
+      name: '{{ item }}'
+    with_items:
+      - 'sudo'
+      - 'libselinux-python'
+      - 'avahi'
+      - 'avahi-tools'
+  - name: 'Enable services'
+    service:
+      name: '{{ item }}'
+      state: 'started'
+      enabled: yes
+    with_items:
+      - 'avahi-daemon'
+
+  - name: 'Set up environment'
+    template:
+      src: 'etc-environment.j2'
+      dest: '/etc/environment'
+      owner: 'root'
+      group: 'root'
+      mode: '0644'
+
+
+### Set up default users
+  - name: 'Add groups'
+    group:
+      name: docker
+      state: present
+      system: yes
+
+  - name: 'Add Users'
+    user: 
+      name: 'pontus'
+      shell: '/bin/bash'
+      generate_ssh_key: yes
+      ssh_key_type: 'ED25519'
+      groups:
+        - docker
+  - name: 'Add authorized_keys'
+    authorized_key:
+      user: 'pontus'
+      key: 'https://github.com/pontusolsson.keys'
+      exclusive: yes
+      manage_dir: yes
+  - name: 'Passwordless sudo'
+    lineinfile:
+      path: '/etc/sudoers'
+      state: 'present'
+      regexp: '^pontus\b'
+      line: 'pontus ALL=(ALL) NOPASSWD: ALL'
+
+
+   

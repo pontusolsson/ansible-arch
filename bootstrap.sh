@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-pacman -Syu --noconfirm python
+dnf -y makecache
+dnf -y install python
