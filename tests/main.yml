@@ -1,0 +1,6 @@
+---
+- hosts: all
+  gather_facts: yes
+
+- name: 'Run Install GitLab Playbook'
+  import_playbook: '../basesetup.yml'
