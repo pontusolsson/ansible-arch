@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 # cluster configure
 boxes = {
-  "fedora-27"      => { :box => "bento/fedora-27",      :cpu => "1", :ram => "1024" },
+  "arch"      => { :box => "archlinux/archlinux",      :cpu => "1", :ram => "1024" },
 }
 
 Vagrant.configure("2") do |config|

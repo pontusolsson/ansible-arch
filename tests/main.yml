@@ -4,5 +4,5 @@
 
 - name: 'Install Base System'
   import_playbook: '../playbooks/basesetup.yml'
-- name: 'Install OpenShift Origin'
-  import_playbook: '../playbooks/openshift.yml'
+- name: 'Install Docker'
+  import_playbook: '../playbooks/docker.yml'
