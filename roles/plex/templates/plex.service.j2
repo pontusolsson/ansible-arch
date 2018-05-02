@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Plex Server - Docker Compose Service
+After=edgeproxy.service docker.service network-online.target
+
+[Service]
+WorkingDirectory={{ plex_home)) 
+Type=simple
+User={{ plex_user }}
+Group={{ plex_user }}
+TimeoutStartSec=600
+
+ExecStartPre={{ compose_path }}/docker-compose pull --quiet --parallel
+ExecStart={{ compose_path }}/docker-compose up --abort-on-container-exit
+ExecStop={{ compose_path }}/docker-compose down
+ExecReload={{ compose_path }}/docker-compose up --abort-on-container-exit
+
+[Install]
+WantedBy=multi-user.target
+

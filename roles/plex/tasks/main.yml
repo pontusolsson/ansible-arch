@@ -1,0 +1,62 @@
+### Prerequisite roles
+
+- name: 'docker is installed with docker-compose'
+  include_role:
+    name: 'docker'
+  vars:
+    with_docker_compose: yes
+- name: 'edgeproxy is installed'
+  include_role:
+    name: 'edgeproxy'
+
+### System status
+
+- name: '{{ plex_user }} user and group exists'
+  user:
+    name: '{{ plex_user }}'
+    shell: '/bin/bash'
+    home: '{{ plex_home }}'
+    groups:
+      - 'docker'
+
+- name: '{{ plex_home }}/ has correct permissions'
+  file:
+    path: '{{ plex_home }}'
+    state: 'directory'
+    owner: '{{ plex_user }}'
+    group: '{{ plex_user }}' 
+    mode: '0755'
+
+### Service installation
+
+- name: 'plex systemd service is deployed'
+  template:
+    src: 'plex.service.j2'
+    dest: '/etc/systemd/system/plex.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'reload systemd'
+    - 'restart plex'
+
+- name: '{{ plex_home }}/docker-compose.yml is deployed'
+  template:
+    src: 'docker-compose.yml.j2'
+    dest: '{{ plex_home }}/docker_compose.yml'
+    owner: '{{ plex_user }}'
+    group: '{{ plex_user }}'
+    mode: '0644'
+  notify:
+    - 'restart plex'
+
+### Post processing
+
+- meta: flush_handlers
+
+- name: 'plex is {{ plex_state }}'
+  systemd:
+    name: 'plex'
+    state: '{{ plex_state }}'
+    enabled: '{{ ( plex_state == "started") | bool }}'
+

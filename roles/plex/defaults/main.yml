@@ -1,0 +1,8 @@
+plex_user: 'plex'
+plex_home: '/srv/plex'
+plex_state: 'started'
+
+edgeproxy_domains:
+  test.olsson.me:
+    backend: 'plex'
+    port: '32400'
