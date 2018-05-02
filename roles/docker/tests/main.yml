@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: yes
+  tasks:
+    - name: "Include this role"
+      include_role:
+         name: this-role
+      vars:
+         with_docker_compose: yes   
+#        name: '../../.'

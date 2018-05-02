@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+DOCKER_OPTS=""
+{% for option in docker_options | default([]) %}
+DOCKER_OPTS="$DOCKER_OPTS {{ option }}"
+{% endfor %}
+export DOCKER_OPTS
+
+{% if http_proxy %}
+export http_proxy="{{ http_proxy }}"
+{% endif %}
+

@@ -1,0 +1,22 @@
+---
+
+docker_service_state: 'started'
+docker_service_enabled: '{{ docker_service_state == "started" }}'
+
+docker_daemon: {}
+docker_config:
+  graph: '{{ docker_directory }}'
+  hosts: 
+    - 'tcp://0.0.0.0:2375'
+    - 'unix:///var/run/docker.sock'
+  log-level: 'info'
+  log-driver: 'json-file'
+  log-opts:
+    max-file: '5'
+    max-size: '10m'
+
+docker_certs: []
+docker_registries: []
+
+with_docker_compose: no
+docker_compose_version: ''
