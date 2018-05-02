@@ -1,0 +1,71 @@
+### Prerequisite roles
+
+- name: 'docker is installed with docker-compose'
+  include_role:
+    name: 'docker'
+  vars:
+    with_docker_compose: yes
+
+### System status
+
+- name: '{{ edgeproxy_user }} user and group exists'
+  user:
+    name: '{{ edgeproxy_user }}'
+    shell: '/bin/bash'
+    home: '{{ edgeproxy_home }}'
+    groups:
+      - 'docker'
+
+- name: '{{ edgeproxy_home }}/ has correct permissions'
+  file:
+    path: '{{ edgeproxy_home }}'
+    state: 'directory'
+    owner: '{{ edgeproxy_user }}'
+    group: '{{ edgeproxy_user }}' 
+    mode: '0755'
+
+### Service installation
+
+- name: 'edgeproxy systemd service is deployed'
+  template:
+    src: 'edgeproxy.service.j2'
+    dest: '/etc/systemd/system/edgeproxy.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'reload systemd'
+    - 'restart edgeproxy'
+
+- name: '{{ edgeproxy_home }}/docker-compose.yml is deployed'
+  template:
+    src: 'docker-compose.yml.j2'
+    dest: '{{ edgeproxy_home }}/docker_compose.yml'
+    owner: '{{ edgeproxy_user }}'
+    group: '{{ edgeproxy_user }}'
+    mode: '0644'
+  notify:
+    - 'restart edgeproxy'
+
+### Deploy configuration
+
+- name: 'Deploy {{ edgeproxy_home }}/etc/haproxy.cfg'
+  template: 
+    src: 'haproxy.cfg.j2'
+    dest: '{{ edgeproxy_home }}/etc/haproxy.cfg'
+    owner: 'root'
+    group: 'root'
+    mode: '0640'
+  notify:
+    - 'restart edgeproxy'
+
+### Post processing
+
+- meta: flush_handlers
+
+- name: 'edgeproxy is {{ edgeproxy_state }}'
+  systemd:
+    name: 'edgeproxy'
+    state: '{{ edgeproxy_state }}'
+    enabled: '{{ ( edgeproxy_state == "started") | bool }}'
+

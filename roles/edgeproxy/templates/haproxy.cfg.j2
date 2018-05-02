@@ -1,0 +1,51 @@
+# {{ ansible_managed }}
+
+resolvers docker
+  nameserver dnsmasq 127.0.0.11:53
+
+global
+  user root
+  group root
+  maxconn 4096
+  daemon
+
+defaults
+  log global
+  mode http
+  balance roundrobin
+  timeout connect 5000
+  timeout client 50000
+  timeout server 50000
+
+listen stats 
+  bind *:9999
+  stats enable
+  stats uri /
+  stats auth admin:password
+
+frontend https
+  bind *:443 ssl crt /usr/local/etc/haproxy/cert.pem
+  option httpclose
+  option forwardfor
+{% for (domain,_) in edgeproxy_domains | d( {} ) | dictsort %}
+  acl {{ domain }} ssl_fc_sni {{ domain }}
+  use_backend {{ domain }} if {{ domain }}
+{% endfor %}
+  default_backend no-match 
+
+frontend http
+  bind *:80
+  redirect scheme https
+
+backend no-match
+  http-request deny deny_status 400
+
+{% for (domain,v) in ( edgeproxy_domains | d( {} ) ) | dictsort %}
+
+backend {{ domain }}
+{%   for opt in v.options | d ( [] ) %} 
+  {{ option }}
+{%   endfor %}
+  server {{ domain }} {{ v.backend }}:{{ v.port }} check resolvers docker resolve-prefer ipv4 init-addr none 
+{% endfor %}  
+  

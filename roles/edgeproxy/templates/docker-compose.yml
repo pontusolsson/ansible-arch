@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+version: '3.5'
+services:
+  plex:
+    image: 'haproxy:alpine'
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - {{ edgeproxy_home }}/etc:/usr/local/etc/haproxy
+    networks:
+      - plex
+      - proxy
+
+networks:
+  proxy:
+    name: proxy-net

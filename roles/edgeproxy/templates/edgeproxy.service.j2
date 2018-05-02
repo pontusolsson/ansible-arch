@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=EdgeProxy - Docker Compose Service
+After=docker.service network-online.target
+
+[Service]
+WorkingDirectory={{ edgeproxy_home }}
+Type=simple
+User={{ edgeproxy_user }}
+Group={{ edgeproxy_user }}
+TimeoutStartSec=600
+
+ExecStartPre={{ compose_path }}/docker-compose pull --quiet --parallel
+ExecStart={{ compose_path }}/docker-compose up --abort-on-container-exit
+ExecStop={{ compose_path }}/docker-compose down
+ExecReload={{ compose_path }}/docker-compose up --abort-on-container-exit
+
+[Install]
+WantedBy=multi-user.target
+
