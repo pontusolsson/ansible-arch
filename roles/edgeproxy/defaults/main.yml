@@ -1,7 +1,7 @@
 ---
 
 edgeproxy_user: 'edgeproxy'
-edgeproxy_home: '/src/edgeproxy'
+edgeproxy_home: '/srv/edgeproxy'
 edgeproxy_state: 'started'
 
 edgeproxy_tld: example.net
