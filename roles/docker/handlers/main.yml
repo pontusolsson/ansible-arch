@@ -4,5 +4,5 @@
   service: 
     name: 'docker'
     state: 'restarted'
-  when: docker_service_state != 'stopped'
+  when: docker_state != 'stopped'
   become: yes

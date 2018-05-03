@@ -1,0 +1,12 @@
+---
+
+- name: 'reload systemd'
+  command: 'systemctl daemon-reload'
+  become: yes
+
+- name: 'restart edgeproxy'
+  service: 
+    name: 'edgeproxy'
+    state: 'restarted'
+  when: edgeproxy_state != 'stopped'
+  become: yes
