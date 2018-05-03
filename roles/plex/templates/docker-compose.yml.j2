@@ -3,10 +3,13 @@
 version: '3.5'
 services:
   plex:
-    image: 'linuxserver/plex'
+    hostname: plex.olsson.me
+    container_name: plex
+    image: 'plexinc/pms-docker'
     environment:
-      VERSION: 'latest'
       TZ: 'Europe/Stockholm'
+      ADVERTISE_IP: 'http://10.0.1.2:32400/'
+      PLEX_CLAIM: CLAIM-CXJWMUSSUYZPMSIB82HD
     ports:
       - 32400:32400 # web ui (/web)
       - 1900:1900/udp # PLEX DLNA Server
@@ -19,15 +22,73 @@ services:
       - 32414:32414/udp # -"-
       - 32469:32469 # PLEX DLNA Access
     volumes:
-      - {{ plex_home }}/plexconfig:/config
+      - {{ plex_home }}/config/plex:/config
       - {{ plex_home }}/data:/data
+      - {{ plex_home }}/transcode:/transcode
     networks:
-      - plex
+      - media
       - proxy
+
+  sonarr:
+    hostname: sonarr.olsson.me
+    container_name: sonarr
+    image: 'linuxserver/sonarr'
+    environment:
+      TZ: 'Europe/Stockholm'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - {{ plex_home }}/config/sonarr:/config
+      - {{ plex_home }}/data:/data
+      - {{ plex_home }}/downloads/sonarr:/downloads
+    networks:
+      - proxy
+      - media
+
+  radarr:
+    hostname: radarr.olsson.me
+    container_name: radarr
+    image: 'linuxserver/radarr'
+    environment:
+      TZ: 'Europe/Stockholm'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - {{ plex_home }}/config/radarr:/config
+      - {{ plex_home }}/data:/data
+      - {{ plex_home }}/downloads/radarr:/downloads
+    networks:
+      - proxy
+      - media
+
+  nzbget:
+    hostname: nzbget.olsson.me
+    container_name: nzbget
+    image: 'linuxserver/nzbget'
+    environment:
+      TZ: 'Europe/Stockholm'
+    volumes:
+      - {{ plex_home }}/config/nzbget:/config
+      - {{ plex_home }}/downloads:/downloads
+    networks:
+      - proxy
+      - media
+
+  deluge:
+    hostname: deluge.olsson.me
+    container_name: deluge
+    image: 'linuxserver/deluge'
+    environment:
+      TZ: 'Europe/Stockholm'
+    volumes:
+      - {{ plex_home }}/config/deluge:/config
+      - {{ plex_home }}/downloads:/downloads
+    network_mode: host
+
+      
+
 
 networks:
   proxy:
     external:
       name: proxy-net
-  plex:
-    name: plex-net
+  media:
+    name: media-net
