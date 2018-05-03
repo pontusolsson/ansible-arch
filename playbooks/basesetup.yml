@@ -9,15 +9,12 @@
       name: '{{ item }}'
     with_items:
       - 'sudo'
-      - 'avahi'
-      - 'nss-mdns'
 #  - name: 'Enable services'
 #    service:
 #      name: '{{ item }}'
 #      state: 'started'
 #      enabled: yes
 #    with_items:
-#      - 'avahi-daemon'  # error in /etc/dbus-1/system.d/avahi-dbus.conf
 
   - name: 'Set up environment'
     template:
