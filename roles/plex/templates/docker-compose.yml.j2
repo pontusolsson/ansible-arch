@@ -8,16 +8,16 @@ services:
       VERSION: 'latest'
       TZ: 'Europe/Stockholm'
     ports:
-      - 32400:32400 	# web ui (/web)
-      - 1900:1900/udp 	# PLEX DLNA Server
-      - 3005:3005	# PLEX Home Theater control
-      - 5353:5353/udp	# Avahi
-      - 83248324	# PLEX for Roku control
-      - 32410:32410/udp	# GDM Discovery
-      - 32412:32412/udp	# -"-
-      - 32413:32413/udp	# -"-
-      - 32414:32414/udp	# -"-
-      - 32469:32469	# PLEX DLNA Access
+      - 32400:32400 # web ui (/web)
+      - 1900:1900/udp # PLEX DLNA Server
+      - 3005:3005 # PLEX Home Theater control
+      - 5353:5353/udp # Avahi
+      - 83248324 # PLEX for Roku control
+      - 32410:32410/udp # GDM Discovery
+      - 32412:32412/udp # -"-
+      - 32413:32413/udp # -"-
+      - 32414:32414/udp # -"-
+      - 32469:32469 # PLEX DLNA Access
     volumes:
       - {{ plex_home }}/plexconfig:/config
       - {{ plex_home }}/data:/data
