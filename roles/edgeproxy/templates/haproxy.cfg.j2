@@ -28,7 +28,7 @@ frontend https
   option httpclose
   option forwardfor
 {% for (domain,_) in edgeproxy_domains | d( {} ) | dictsort %}
-  acl {{ domain }} ssl_fc_sni {{ domain }}
+  acl {{ domain }} ssl_fc_sni {{ domain }}.{{ edgeproxy_tld }}
   use_backend {{ domain }} if {{ domain }}
 {% endfor %}
   default_backend no-match 

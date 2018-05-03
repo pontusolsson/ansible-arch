@@ -1,0 +1,12 @@
+- hosts: all
+  become: True
+  tasks:
+
+### Base packages and settings
+
+  - name: 'Install packages'
+    package:
+      name: '{{ item }}'
+    with_items:
+      - 'dnsmasq'
+

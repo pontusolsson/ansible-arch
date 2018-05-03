@@ -1,0 +1,9 @@
+- hosts: all
+  become: True
+  tasks:
+
+### Prerequisite roles
+  - name: 'plex role installed'
+    include_role:
+      name: 'plex'
+

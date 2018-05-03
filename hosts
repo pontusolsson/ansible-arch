@@ -1,0 +1,8 @@
+all:
+  hosts:
+    nashi.local:
+      edgeproxy_tld: olsson.me
+      edgeproxy_domain:
+        plex:
+          backend: 'plex'
+          port: '32400'
