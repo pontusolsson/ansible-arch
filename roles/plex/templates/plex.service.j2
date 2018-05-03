@@ -5,16 +5,16 @@ Description=Plex Server - Docker Compose Service
 After=edgeproxy.service docker.service network-online.target
 
 [Service]
-WorkingDirectory={{ plex_home)) 
+WorkingDirectory={{ plex_home }}
 Type=simple
 User={{ plex_user }}
 Group={{ plex_user }}
 TimeoutStartSec=600
 
-ExecStartPre={{ compose_path }}/docker-compose pull --quiet --parallel
-ExecStart={{ compose_path }}/docker-compose up --abort-on-container-exit
-ExecStop={{ compose_path }}/docker-compose down
-ExecReload={{ compose_path }}/docker-compose up --abort-on-container-exit
+ExecStartPre=/usr/bin/docker-compose pull --quiet --parallel
+ExecStart=/usr/bin/docker-compose up --abort-on-container-exit
+ExecStop=/usr/bin/docker-compose down
+ExecReload=/usr/bin/docker-compose up --abort-on-container-exit
 
 [Install]
 WantedBy=multi-user.target
