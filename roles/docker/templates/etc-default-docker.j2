@@ -6,7 +6,7 @@ DOCKER_OPTS="$DOCKER_OPTS {{ option }}"
 {% endfor %}
 export DOCKER_OPTS
 
-{% if http_proxy %}
+{% if http_proxy is defined %}
 export http_proxy="{{ http_proxy }}"
 {% endif %}
 
