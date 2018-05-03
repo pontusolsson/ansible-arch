@@ -1,0 +1,12 @@
+---
+
+- name: 'reload systemd'
+  command: 'systemctl daemon-reload'
+  become: yes
+
+- name: 'restart plex'
+  service: 
+    name: 'plex'
+    state: 'restarted'
+  when: plex_state != 'stopped'
+  become: yes
