@@ -2,7 +2,7 @@
 
 version: '3.5'
 services:
-  plex:
+  edgeproxy:
     image: 'haproxy:alpine'
     ports:
       - 80:80
@@ -11,7 +11,6 @@ services:
     volumes:
       - {{ edgeproxy_home }}/etc:/usr/local/etc/haproxy
     networks:
-      - plex
       - proxy
 
 networks:
