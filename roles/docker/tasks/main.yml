@@ -25,16 +25,16 @@
     mode: '0644'
   become: yes
 
-- meta: flush_handlers
-
-- name: 'Configure docker service'
-  service:
-    name: 'docker'
-    enabled: '{{ docker_service_enabled }}'
-    state: '{{ docker_service_state }}'
-  become: yes
-
 - name: 'Install docker-compose'
   include_tasks: 'docker-compose.yml'
   when: with_docker_compose
+
+- meta: flush_handlers
+
+- name: 'docker is {{ docker_state }}'
+  systemd:
+    name: 'docker'
+    state: '{{ docker_state }}'
+    enabled: '{{ ( docker_state == "started") | bool }}'
+
 
