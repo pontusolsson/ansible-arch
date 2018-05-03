@@ -40,7 +40,7 @@
 - name: '{{ edgeproxy_home }}/docker-compose.yml is deployed'
   template:
     src: 'docker-compose.yml.j2'
-    dest: '{{ edgeproxy_home }}/docker_compose.yml'
+    dest: '{{ edgeproxy_home }}/docker-compose.yml'
     owner: '{{ edgeproxy_user }}'
     group: '{{ edgeproxy_user }}'
     mode: '0644'
