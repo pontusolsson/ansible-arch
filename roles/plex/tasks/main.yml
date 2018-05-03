@@ -43,7 +43,7 @@
 - name: '{{ plex_home }}/docker-compose.yml is deployed'
   template:
     src: 'docker-compose.yml.j2'
-    dest: '{{ plex_home }}/docker_compose.yml'
+    dest: '{{ plex_home }}/docker-compose.yml'
     owner: '{{ plex_user }}'
     group: '{{ plex_user }}'
     mode: '0644'
