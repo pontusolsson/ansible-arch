@@ -16,7 +16,7 @@
     groups:
       - 'docker'
 
-- name: '{{ edgeproxy_home }}/ has correct permissions'
+- name: '{{ edgeproxy_home }}/ is correct'
   file:
     path: '{{ edgeproxy_home }}'
     state: 'directory'
@@ -49,12 +49,20 @@
 
 ### Deploy configuration
 
-- name: 'Deploy {{ edgeproxy_home }}/etc/haproxy.cfg'
+- name: '{{ edgeproxy_home }}/etc is correct'
+  file:
+    path: '{{ edgeproxy_home }}/etc'
+    state: 'directory'
+    owner: '{{ edgeproxy_user }}'
+    group: '{{ edgeproxy_user }}'
+    mode: '0755'
+
+- name: '{{ edgeproxy_home }}/etc/haproxy.cfg is deployed'
   template: 
     src: 'haproxy.cfg.j2'
     dest: '{{ edgeproxy_home }}/etc/haproxy.cfg'
-    owner: 'root'
-    group: 'root'
+    owner: '{{ edgeproxy_user }}'
+    group: '{{ edgeproxy_user }}'
     mode: '0640'
   notify:
     - 'restart edgeproxy'
